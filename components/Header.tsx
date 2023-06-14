@@ -11,7 +11,7 @@ function Header() {
           <h1 className="font-bold">
             <span className="text-violet-500">AI</span> Image Generator
           </h1>
-          <h2 className="text-xs">Powered by DALL-E 2, Chat GPT & MS Azure</h2>
+          <h2 className="text-xs">Powered by DALL-E 2, Chat GPT & Vercel</h2>
         </div>
       </div>
 
