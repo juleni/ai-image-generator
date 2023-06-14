@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import PromptInput from "@/components/PromptInput";
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
 
@@ -20,6 +21,7 @@ export default function RootLayout({
         {/** Header */}
         <Header />
         {/** Prompt Input */}
+        <PromptInput />
         {children}
       </body>
     </html>
