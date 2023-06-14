@@ -1,0 +1,6 @@
+Let’s build a DALL·E 2.0 Image Generator with REACT! (Chat GPT, Next.js 13.2, Microsoft Azure, TS) 
+--------------------------------------------------------------------------------------------------
+https://www.youtube.com/watch?v=0qHnVYSxZ4k&ab_channel=SonnySangha  (3:26:03)
+11:20
+
+- npx create-next-app@latest ai-image-generator --typescript --eslint
