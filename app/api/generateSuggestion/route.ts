@@ -1,3 +1,4 @@
+// import openai from "@/openai";
 import { NextResponse } from "next/server";
 
 /**
@@ -19,6 +20,9 @@ export async function GET(request: Request) {
   return NextResponse.json(responseText);
  */
 
+/**
+ * TODO: Bypass endpoint - COMMENTED FOR NOW
+ */
 export async function GET(request: Request) {
   const responseText =
     "Create a old fashioned abstract oil painting of a city skyline at night";
