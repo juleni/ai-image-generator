@@ -16,13 +16,19 @@ function PromptInput() {
     revalidateOnFocus: false,
   });
 
+  const loading = isLoading || isValidating;
+
   return (
     <div className="m-10">
       <form className="flex flex-col lg:flex-row shadow-md shadow-slate-400/10 border rounded-md lg:divide-x">
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={suggestion || "Enter a prompt..."}
+          placeholder={
+            (loading && "ChatGPT is thinking of a suggestion...") ||
+            suggestion ||
+            "Enter a prompt..."
+          }
           className="flex-1 p-4 outline-none rounded-md"
         />
         <button
