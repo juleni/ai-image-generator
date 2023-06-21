@@ -51,8 +51,8 @@ const fetchImagesFormDB = async () => {
   console.log(images);
   console.log("---- files:");
   console.log(imgFileData);
-  console.log("************** fetchImagesFormDB END");
 */
+  console.log("************** fetchImagesFormDB END");
   return arrImagesReturn;
 };
 
