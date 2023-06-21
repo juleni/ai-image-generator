@@ -15,11 +15,10 @@ function Images() {
     isLoading,
     mutate: refreshImages,
     isValidating,
-  } = useSWR("/api/getImages", fetchImagesFormDB, {
+  } = useSWR("images" /* "/api/getImages" */, fetchImagesFormDB, {
     revalidateOnFocus: false,
   });
-  console.log("**********************************");
-  console.log("**********************************");
+  console.log("******* Images.tsx: images");
 
   console.log(images);
 

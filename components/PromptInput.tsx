@@ -1,6 +1,7 @@
 "use client";
 
 import { databases, ID } from "@/appwrite";
+import fetchImagesFormDB from "@/lib/fetchImagesFromDB";
 import fetchSuggestionFromChatGPT from "@/lib/fetchSuggestionFromChatGPT";
 import uploadImage from "@/lib/uploadImage";
 import axios from "axios";
@@ -17,6 +18,10 @@ function PromptInput() {
     mutate,
     isValidating,
   } = useSWR("/api/generateSuggestion", fetchSuggestionFromChatGPT, {
+    revalidateOnFocus: false,
+  });
+
+  const { mutate: updateImages } = useSWR("images", fetchImagesFormDB, {
     revalidateOnFocus: false,
   });
 
@@ -40,9 +45,10 @@ function PromptInput() {
     console.log(data);
 
     /****
-    * TODO: Version running getImage API and should return new image File object. 
-    *       But returns empty jason value
-    *       This version was created becouse of CORS
+     * TODO: Version running getImage API and should return new image File object.
+     *       But returns empty jason value
+     *       This version was created becouse of CORS
+     *
     // data.url is the url to send to API
     const resImg = await fetch("/api/getImage?url=" + data.url, {
       method: "GET",
@@ -52,21 +58,20 @@ function PromptInput() {
       },
       // body: JSON.stringify({ url: data.url }), // set image url to the body
     });
-    const dataImg = await resImg;
     console.log("****** resImg:");
     console.log(resImg);
-*****/
-
-    /*
-
-    console.log("****** dataImg:");
-    console.log(dataImg);
-    console.log("******");
-    console.log("****** arrayBuffer:");
-    const arrayBuffer = await dataImg.arrayBuffer();
+    const arrayBuffer = await resImg.arrayBuffer();
     console.log("****** arrayBuffer:");
     console.log(arrayBuffer);
-*/
+
+
+    ******/
+
+    /****
+     * TODO: Working version running bypassing getImage API and calling axios instead
+     *       There is problem with CORS in this case - Find out how to resolve this
+     *       This version was created becouse of CORS
+     */
 
     const responseImage = await axios.get(data.url, {
       responseType: "arraybuffer",
@@ -75,12 +80,13 @@ function PromptInput() {
       },
     });
     console.log("----responseImage----");
-    console.log(responseImage);
-    const arrayBuffer = responseImage.data;
+    // console.log(responseImage);
 
-    //const arrayBuffer = await resImg.arrayBuffer();
-    console.log("****** arrayBuffer:");
-    console.log(arrayBuffer);
+    /****/
+
+    const arrayBuffer = responseImage.data;
+    // console.log("****** arrayBuffer:");
+    // console.log(arrayBuffer);
     // Generate filename based on timestamp and inserted prompt
     const timestamp = new Date().getTime();
     const file_name = `${timestamp}_${promptGenImage}.jpg`;
@@ -118,6 +124,7 @@ function PromptInput() {
         }),
       }
     );
+    updateImages();
   };
 
   const handleSumbit = async (e: FormEvent<HTMLFormElement>) => {
