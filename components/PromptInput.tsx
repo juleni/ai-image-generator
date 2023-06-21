@@ -6,6 +6,7 @@ import fetchSuggestionFromChatGPT from "@/lib/fetchSuggestionFromChatGPT";
 import uploadImage from "@/lib/uploadImage";
 import axios from "axios";
 import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 import useSWR from "swr";
 
 function PromptInput() {
@@ -34,6 +35,13 @@ function PromptInput() {
 
     // promptGenImage is the prompt to send to API
     const promptGenImage = useSuggestion ? suggestion : inputPrompt;
+
+    const notificationPrompt = promptGenImage;
+    const notificationPromptShort = notificationPrompt.slice(0, 20);
+    const notification = toast.loading(
+      `DALL-E is crating: ${notificationPromptShort} ...`
+    );
+
     const res = await fetch("/api/generateImage", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -43,6 +51,14 @@ function PromptInput() {
     const data = await res.json();
     console.log("-------- DATA");
     console.log(data);
+
+    if (data.error) {
+      toast.error(data.error);
+    } else {
+      toast.success("Your AI Art has been generated successfully", {
+        id: notification,
+      });
+    }
 
     /****
      * TODO: Version running getImage API and should return new image File object.
@@ -124,6 +140,7 @@ function PromptInput() {
         }),
       }
     );
+
     updateImages();
   };
 

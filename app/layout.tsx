@@ -1,3 +1,4 @@
+import ClientProvider from "@/components/ClientProvider";
 import Header from "@/components/Header";
 import PromptInput from "@/components/PromptInput";
 import { Inter } from "next/font/google";
@@ -18,11 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/** Header */}
-        <Header />
-        {/** Prompt Input */}
-        <PromptInput />
-        {children}
+        <ClientProvider>
+          {/** Header */}
+          <Header />
+          {/** Prompt Input */}
+          <PromptInput />
+          {children}
+        </ClientProvider>
       </body>
     </html>
   );
