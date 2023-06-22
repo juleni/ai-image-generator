@@ -159,7 +159,6 @@ function PromptInput() {
           New Suggestion
         </button>
       </form>
-      <p>aaa {input}</p>
       {input && (
         <p className="italic p-2 font-light">
           Suggestion from Chat GPT:{" "}
