@@ -4,7 +4,6 @@ import { databases, ID } from "@/appwrite";
 import fetchImagesFormDB from "@/lib/fetchImagesFromDB";
 import fetchSuggestionFromChatGPT from "@/lib/fetchSuggestionFromChatGPT";
 import uploadImage from "@/lib/uploadImage";
-import axios from "axios";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
@@ -29,7 +28,6 @@ function PromptInput() {
   const loading = isLoading || isValidating;
 
   const submitPrompt = async (useSuggestion?: boolean) => {
-    console.log("******************** submitPrompt");
     const inputPrompt = input;
     setInput("");
 
@@ -42,67 +40,36 @@ function PromptInput() {
       `DALL-E is crating: ${notificationPromptShort} ...`
     );
 
-    const res = await fetch("/api/generateImage", {
+    // generate Image from DALL-E and return url of generated image
+    const generatedImageResponse = await fetch("/api/generateImage", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt: promptGenImage }),
     });
 
-    const data = await res.json();
+    const generatedImageData = await generatedImageResponse.json();
     console.log("-------- DATA");
-    console.log(data);
+    console.log(generatedImageData);
 
-    if (data.error) {
-      toast.error(data.error);
+    if (generatedImageData.error) {
+      toast.error(generatedImageData.error);
     } else {
       toast.success("Your AI Art has been generated successfully", {
         id: notification,
       });
     }
 
-    /****
-     * TODO: Version running getImage API and should return new image File object.
-     *       But returns empty jason value
-     *       This version was created becouse of CORS
-     *
-    // data.url is the url to send to API
-    const resImg = await fetch("/api/getImage?url=" + data.url, {
-      method: "GET",
+    // Get image file from the url
+    const resImg = await fetch("/api/getImage", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
-      // body: JSON.stringify({ url: data.url }), // set image url to the body
+      body: JSON.stringify({ url: generatedImageData.url }), // set image url to the body
     });
-    console.log("****** resImg:");
-    console.log(resImg);
     const arrayBuffer = await resImg.arrayBuffer();
-    console.log("****** arrayBuffer:");
-    console.log(arrayBuffer);
 
-
-    ******/
-
-    /****
-     * TODO: Working version running bypassing getImage API and calling axios instead
-     *       There is problem with CORS in this case - Find out how to resolve this
-     *       This version was created becouse of CORS
-     */
-
-    const responseImage = await axios.get(data.url, {
-      responseType: "arraybuffer",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-    console.log("----responseImage----");
-    // console.log(responseImage);
-
-    /****/
-
-    const arrayBuffer = responseImage.data;
-    // console.log("****** arrayBuffer:");
-    // console.log(arrayBuffer);
     // Generate filename based on timestamp and inserted prompt
     const timestamp = new Date().getTime();
     const file_name = `${timestamp}_${promptGenImage}.jpg`;
@@ -119,7 +86,6 @@ function PromptInput() {
           bucketId: fileUploaded.bucketId,
           fileId: fileUploaded.$id,
         };
-        console.log(generatedFileFromDB);
       } else {
         console.log("Image not uploaded");
       }
@@ -180,6 +146,7 @@ function PromptInput() {
           type="button"
           className="p-4 bg-violet-300 text-white duration-200 font-bold transition-colors
         disabled:text-gray-300 disabled:cursor-not-alowed disabled:bg-gray-400"
+          onClick={() => submitPrompt(true)}
         >
           Use Suggestion
         </button>
@@ -192,6 +159,7 @@ function PromptInput() {
           New Suggestion
         </button>
       </form>
+      <p>aaa {input}</p>
       {input && (
         <p className="italic p-2 font-light">
           Suggestion from Chat GPT:{" "}

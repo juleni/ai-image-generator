@@ -1,9 +1,10 @@
 // import openai from "@/openai";
+import openai from "@/openai";
 import { NextResponse } from "next/server";
 
 /**
  * TODO: Original endpoint - COMMENTED FOR NOW
-
+ */
 export async function GET(request: Request) {
   let out = openai;
   // Communicate with openAI GPT
@@ -18,13 +19,15 @@ export async function GET(request: Request) {
 
   //return { body: responseText };
   return NextResponse.json(responseText);
- */
+}
 
 /**
  * TODO: Bypass endpoint - COMMENTED FOR NOW
  */
+/****
 export async function GET(request: Request) {
   const responseText =
     "Create a old fashioned abstract oil painting of a city skyline at night";
   return NextResponse.json(responseText);
 }
+****/

@@ -18,9 +18,6 @@ function Images() {
   } = useSWR("images" /* "/api/getImages" */, fetchImagesFormDB, {
     revalidateOnFocus: false,
   });
-  console.log("******* Images.tsx: images");
-
-  console.log(images);
 
   return (
     <div>
